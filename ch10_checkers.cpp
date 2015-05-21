@@ -5,6 +5,8 @@ using namespace std;
 
 void printBoard(string pieces[8][8])
 {
+    //simplify this code
+
         cout << "  _ _ _ _ _ _ _ _\n";
         cout << "8|" << pieces[0][7] << " " << pieces[1][7] << " " << pieces[2][7] << " " << pieces[3][7] << " " << pieces[4][7] << " " << pieces[5][7] << " " << pieces[6][7] << " " << pieces[7][7] << "|\n";
         cout << "7|" << pieces[0][6] << " " << pieces[1][6] << " " << pieces[2][6] << " " << pieces[3][6] << " " << pieces[4][6] << " " << pieces[5][6] << " " << pieces[6][6] << " " << pieces[7][6] <<    "|\n";
@@ -22,7 +24,6 @@ void initializeBoard(string pieces[8][8])
 {
     for(int x=0; x<8; x++)
     {
-        cout << x << '\n';
         for(int y=0; y<3; y++)
         {
             if(x%2==1 & y==0 | x%2==1 & y==2 | x%2==0 & y==1)
@@ -79,10 +80,45 @@ void makeaMove(string pieces[8][8])
     printBoard(pieces);
 }
 
+bool checkEndgame(string pieces[8][8])
+{
+    bool red = false;
+    bool black = false;
+    
+    for(int x=0; x<8; x++)
+    {
+        for(int y=0; x<8; x++)
+        {
+            if(pieces[x][y] == "R")
+            {
+                red = true;
+            }
+
+            else if(pieces[x][y] == "B")
+            {
+                black = true;
+            }
+
+            if(red && black)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 int main()
 {
     string pieces[8][8];
     initializeBoard(pieces);
     printBoard(pieces);
-    makeaMove(pieces);
+    
+    bool endgame = checkEndgame(pieces);
+    while(endgame==true)
+    {
+        cout << "entered loop";
+        makeaMove(pieces);
+        endgame = checkEndgame(pieces);
+    }
 }
