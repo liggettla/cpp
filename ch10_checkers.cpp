@@ -84,28 +84,33 @@ bool checkEndgame(string pieces[8][8])
 {
     bool red = false;
     bool black = false;
-    
+
     for(int x=0; x<8; x++)
     {
         for(int y=0; x<8; x++)
         {
+//cout << pieces[x][y] << "\n";
+cout << "Current piece: " << pieces[x][y] <<  "\n";
             if(pieces[x][y] == "R")
             {
                 red = true;
+cout << "red==true\n";
             }
 
             else if(pieces[x][y] == "B")
             {
                 black = true;
+cout << " black==true\n";
             }
 
-            if(red && black)
+            if(red & black)
             {
                 return true;
             }
         }
     }
-    return false;
+cout << "hellooooooooooooooooooooooo\n";
+//    return false;
 }
 
 int main()
@@ -115,10 +120,19 @@ int main()
     printBoard(pieces);
     
     bool endgame = checkEndgame(pieces);
+    endgame = true;
     while(endgame==true)
     {
-        cout << "entered loop";
+        //cout << "entered loop\n";
         makeaMove(pieces);
         endgame = checkEndgame(pieces);
+//	if(endgame)
+//        {
+  //          cout << "endgame==true\n";
+    //    }
+      //  if(!endgame)
+//{
+//cout << "endgame==false\n";
+//}
     }
 }
