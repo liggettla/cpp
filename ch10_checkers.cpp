@@ -25,15 +25,26 @@ void initializeBoard(string pieces[8][8])
         cout << x << '\n';
         for(int y=0; y<3; y++)
         {
-//            if(x%2==0 & y%2==1)
- //           {
+            if(x%2==1 & y==0 | x%2==1 & y==2 | x%2==0 & y==1)
+            {
                 pieces[x][y] = "R";
- //           }
+            }
+            else
+            {
+                pieces[x][y] = " ";
+            }
         }
 
         for(int y=5; y<8; y++)
         {
-            pieces[x][y] = "B";
+            if(x%2==0 & y==5 | x%2==0 & y==7 | x%2==1 & y==6)
+            {
+                pieces[x][y] = "B";
+            }
+            else
+            {
+                pieces[x][y] = " ";
+            }
         }
 
         for(int y=3; y<5; y++)
