@@ -55,6 +55,19 @@ void initializeBoard(string pieces[8][8])
     }
 }
 
+bool checkValidMove(string pieces[8][8], int oldx, int oldy, int newx, int newy)
+{
+    //Make sure destination square is legal
+    if(newx%2==1 & newy==0 | newx%2==0 & newy==1 | newx%2==1 & newy==2 | newx%2==0 & newy==3 | newx%2==1 & newy==4 | newx%2==0 & newy==5 | newx%2==1 & newy==6 | newx%2==0 & newy==7)
+    {
+        //Make sure destination square is empty
+        if(pieces[newx][newy] == " ")
+        {
+            return true;
+        }
+    }
+}
+
 void makeaMove(string pieces[8][8])
 {
     int oldx;
@@ -74,10 +87,21 @@ void makeaMove(string pieces[8][8])
     cin >> newy;
     newy = newy - 1;
 
-    pieces[oldx][oldy] = " ";
-    pieces[newx][newy] = "R";
+    bool validMove = checkValidMove(pieces, oldx, oldy, newx, newy);
 
-    printBoard(pieces);
+    if(validMove)
+    {
+        pieces[oldx][oldy] = " ";
+        pieces[newx][newy] = "R";
+
+        printBoard(pieces);
+    }
+
+    else
+    {
+        cout << "Invalid Move, Try Again: \n";
+        printBoard(pieces);
+    }
 }
 
 bool checkEndgame(string pieces[8][8])
@@ -92,13 +116,11 @@ bool checkEndgame(string pieces[8][8])
             if(pieces[x][y] == "R")
             {
                 red = true;
-                cout << "Piece is: " << pieces[x][y] << '\n';
             }
 
             else if(pieces[x][y] == "B")
             {
                 black = true;
-                cout << "Piece is: " << pieces[x][y] << '\n';
             }
         }
     }
@@ -121,7 +143,6 @@ int main()
     printBoard(pieces);
     
     bool endgame = checkEndgame(pieces);
-    endgame = true;
     while(endgame==true)
     {
         makeaMove(pieces);
