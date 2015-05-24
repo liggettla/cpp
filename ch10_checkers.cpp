@@ -16,7 +16,7 @@ void printBoard(string pieces[8][8])
         cout << "3|" << pieces[0][2] << " " << pieces[1][2] << " " << pieces[2][2] << " " << pieces[3][2] << " " << pieces[4][2] << " " << pieces[5][2] << " " << pieces[6][2] << " " << pieces[7][2] <<    "|\n";
         cout << "2|" << pieces[0][1] << " " << pieces[1][1] << " " << pieces[2][1] << " " << pieces[3][1] << " " << pieces[4][1] << " " << pieces[5][1] << " " << pieces[6][1] << " " << pieces[7][1] <<    "|\n";
         cout << "1|" << pieces[0][0] << " " << pieces[1][0] << " " << pieces[2][0] << " " << pieces[3][0] << " " << pieces[4][0] << " " << pieces[5][0] << " " << pieces[6][0] << " " << pieces[7][0] <<    "|\n";
-        cout << " |_ _ _ _ _ _ _ _\n";
+        cout << " |_ _ _ _ _ _ _ _|\n";
         cout << "  1 2 3 4 5 6 7 8" << '\n';
 }
 
@@ -63,7 +63,49 @@ bool checkValidMove(string pieces[8][8], int oldx, int oldy, int newx, int newy)
         //Make sure destination square is empty
         if(pieces[newx][newy] == " ")
         {
-            return true;
+            //Only move diagonally 1 square
+            if(newx==oldx-1 | newx==oldx+1)
+            {
+                //Pieces only move ahead 1 square
+                if(pieces[oldx][oldy]=="R" & newy==oldy+1 | pieces[oldx][oldy]=="B" & newy==oldy-1)
+                {
+                    return true;
+                }
+            }
+            //Allow for jumping
+            else if(newx==oldx-2 | newx==oldx+2)
+            {
+                //For Red pieces
+                if(pieces[oldx][oldy]=="R")
+                {
+                    //Make sure a piece can be jumped
+                    //And remove jumped piece
+                    if(pieces[oldx+1][oldy+1]=="B")
+                    {
+                        pieces[oldx+1][oldy+1] = " ";
+                        return true;
+                    }
+                    else if(pieces[oldx-1][oldy+1]=="B")
+                    {
+                        pieces[oldx+1][oldy+1] = " ";
+                        return true;
+                    }
+                }
+                //Same for Black Pieces
+                else
+                {
+                    if(pieces[oldx+1][oldy-1]=="R")
+                    {
+                        pieces[oldx+1][oldy-1] = " ";
+                        return true;
+                    }
+                    else if(pieces[oldx-1][oldy-1]=="R")
+                    {
+                        pieces[oldx+1][oldy-1] = " ";
+                        return true;
+                    }
+                }
+            }
         }
     }
 }
@@ -87,16 +129,27 @@ void makeaMove(string pieces[8][8])
     cin >> newy;
     newy = newy - 1;
 
-    bool validMove = checkValidMove(pieces, oldx, oldy, newx, newy);
-
-    if(validMove)
+    //Prevent segmentation fault if position is outside of array coordinates
+    if(newx < 9 & newy < 9)
     {
-        pieces[oldx][oldy] = " ";
-        pieces[newx][newy] = "R";
+        bool validMove = checkValidMove(pieces, oldx, oldy, newx, newy);
 
-        printBoard(pieces);
+        if(validMove)
+        {
+            string currentPiece = pieces[oldx][oldy];
+            pieces[oldx][oldy] = " ";
+            pieces[newx][newy] = currentPiece;
+
+            printBoard(pieces);
+        }
+
+        else
+        {
+            cout << "Invalid Move, Try Again: \n";
+            printBoard(pieces);
+         }
     }
-
+    
     else
     {
         cout << "Invalid Move, Try Again: \n";
