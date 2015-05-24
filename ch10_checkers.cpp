@@ -67,16 +67,16 @@ bool checkValidMove(string pieces[8][8], int oldx, int oldy, int newx, int newy)
             if(newx==oldx-1 | newx==oldx+1)
             {
                 //Pieces only move ahead 1 square
-                if(pieces[oldx][oldy]=="R" & newy==oldy+1 | pieces[oldx][oldy]=="B" & newy==oldy-1)
+                if(pieces[oldx][oldy]=="R" & newy==oldy+1 | pieces[oldx][oldy]=="B" & newy==oldy-1 | ((pieces[oldx][oldy]=="RK" | pieces[oldx][oldy]=="BK") & (newy==oldy+1 | newy==oldy-1)))
                 {
                     return true;
                 }
             }
-            //Allow for jumping
-            else if(newx==oldx-2 | newx==oldx+2)
+            //Allow for jumping rightwards
+            else if(newx==oldx+2)
             {
                 //For Red pieces
-                if(pieces[oldx][oldy]=="R")
+                if(pieces[oldx][oldy]=="R" | pieces[oldx][oldy]=="RK")
                 {
                     //Make sure a piece can be jumped
                     //And remove jumped piece
@@ -85,23 +85,73 @@ bool checkValidMove(string pieces[8][8], int oldx, int oldy, int newx, int newy)
                         pieces[oldx+1][oldy+1] = " ";
                         return true;
                     }
-                    else if(pieces[oldx-1][oldy+1]=="B")
+                }
+                //Allow Red Kings to capture in y both directions
+                if(pieces[oldx][oldy]=="RK")
+                {
+                    if(pieces[oldx+1][oldy-1]=="B")
                     {
-                        pieces[oldx+1][oldy+1] = " ";
+                        pieces[oldx+1][oldy-1] = " ";
                         return true;
                     }
                 }
-                //Same for Black Pieces
-                else
+                //For Black Pieces
+                else if(pieces[oldx][oldy]=="B" | pieces[oldx][oldy]=="BK")
                 {
                     if(pieces[oldx+1][oldy-1]=="R")
                     {
                         pieces[oldx+1][oldy-1] = " ";
                         return true;
                     }
-                    else if(pieces[oldx-1][oldy-1]=="R")
+                }
+                //Allow Black Kings to capture in both y directions
+                if(pieces[oldx][oldy]=="RK")
+                {
+                    if(pieces[oldx+1][oldy+1]=="B")
                     {
-                        pieces[oldx+1][oldy-1] = " ";
+                        pieces[oldx+1][oldy+1] = " ";
+                        return true;
+                    }
+                }
+            }
+            //Allow for jumping leftwards
+            else if(newx==oldx-2)
+            {
+                //For Red pieces
+                if(pieces[oldx][oldy]=="R" | pieces[oldx][oldy]=="RK")
+                {
+                    //Make sure a piece can be jumped
+                    //And remove jumped piece
+                    if(pieces[oldx-1][oldy+1]=="B")
+                    {
+                        pieces[oldx-1][oldy+1] = " ";
+                        return true;
+                    }
+                }
+                //Allow Red Kings to capture in y both directions
+                if(pieces[oldx][oldy]=="RK")
+                {
+                    if(pieces[oldx-1][oldy-1]=="B")
+                    {
+                        pieces[oldx-1][oldy-1] = " ";
+                        return true;
+                    }
+                }
+                //For Black Pieces
+                else if(pieces[oldx][oldy]=="B" | pieces[oldx][oldy]=="BK")
+                {
+                    if(pieces[oldx-1][oldy-1]=="R")
+                    {
+                        pieces[oldx-1][oldy-1] = " ";
+                        return true;
+                    }
+                }
+                //Allow Black Kings to capture in both y directions
+                if(pieces[oldx][oldy]=="RK")
+                {
+                    if(pieces[oldx-1][oldy+1]=="B")
+                    {
+                        pieces[oldx-1][oldy+1] = " ";
                         return true;
                     }
                 }
@@ -139,6 +189,16 @@ void makeaMove(string pieces[8][8])
             string currentPiece = pieces[oldx][oldy];
             pieces[oldx][oldy] = " ";
             pieces[newx][newy] = currentPiece;
+
+            //If piece reaches last rank, king it
+            if(pieces[newx][newy]=="R" & newy==7)
+            {
+                pieces[newx][newy] = "RK";
+            }
+            else if(pieces[newx][newy]=="B" & newy==0)
+            {
+                pieces[newx][newy] = "BK";
+            }
 
             printBoard(pieces);
         }
@@ -183,8 +243,14 @@ bool checkEndgame(string pieces[8][8])
         return true;
     }
     
-    else
+    else if(red)
     {
+        cout << "Game Over! Red Wins!\n";
+        return false;
+    }
+    else if(black)
+    {
+        cout << "Game Over! Black Wins!\n";
         return false;
     }
 }
